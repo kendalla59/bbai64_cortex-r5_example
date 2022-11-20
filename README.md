@@ -24,7 +24,7 @@ cat /sys/kernel/debug/remoteproc/remoteproc18/trace0
 
 You should now see:
 ```
-r5_toggle (Language C)"
+r5_toggle (Language C)
 
 started
 ```
