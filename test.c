@@ -8,8 +8,22 @@
 
 // global structures used by MPU and cache init code
 CacheP_Config gCacheConfig = {1, 0}; // cache on, no forced writethrough
-MpuP_Config gMpuConfig = {3, 1, 1}; // 3 regions, background region on, MPU on
-MpuP_RegionConfig gMpuRegionConfig[3] = {
+MpuP_Config gMpuConfig = {4, 1, 1}; // 4 regions, background region on, MPU on
+MpuP_RegionConfig gMpuRegionConfig[4] = {
+    // Complete 32-bit address space
+    {
+	.baseAddr = 0x0u,
+        .size = MpuP_RegionSize_4G,
+	.attrs = {
+            .isEnable = 1,
+            .isCacheable = 0,
+            .isBufferable = 0,
+            .isSharable = 0,
+            .isExecuteNever = 0,
+            .tex = 1,
+            .accessPerm = MpuP_AP_ALL_RW,
+            .subregionDisableMask = 0x0u},
+    },
     // MSRAM region
     {
         .baseAddr = 0x70000000u,
@@ -157,8 +171,49 @@ int _write(int handle, char *data, int size)
     return count;
 }
 
+// DELAY
+// 7=5.176ns
+// 44=1.0us
+// 50=1.136us
+// 500=11.03us 
+// 5000=110us
+// 50000 = 1.1ms
+// 500000 = 11ms period
+
+int runToggle ()
+{
+        #define DELAY 44
+
+        uint64_t* pDir = (uint64_t *) 0x00600060; //GPIO0 GPIO_DIR45
+        uint64_t* pSet = (uint64_t *) 0x00600068; //GPIO0 GPIO_SET45
+        uint64_t* pClr = (uint64_t *) 0x0060006C; //GPIO0 GPIO_CLR45
+
+	//configure GPIO0_93 pin 9_14 as output
+        *pDir =  0xDFFFFFFF;
+
+        printf ("\n");
+        printf ("r5_toggle (Language: C)\n");
+        printf ("\n");
+
+        printf ("started\n");
+
+        for(;;)
+        {
+                //set output bit 29 high
+                *pSet = 0x20000000;
+                for(volatile int i=0; i< DELAY; i++);
+                //set output bit 29 low
+                *pClr = 0x20000000;
+                for(volatile int i=0; i< DELAY; i++);
+        }
+        printf ("stopped\n");
+
+	return 0;
+}
+
 int main()
 {
-    printf("Hello world!\n");
+    runToggle();
     return 0;
 }
+
