@@ -1,7 +1,7 @@
 APP ?= test.elf
 APP_SOURCES ?= $(wildcard r5/*.S) \
           $(wildcard r5/*.c) \
-	  test.c dhry_1.c dhry_2.c
+	  test.c
 
 CROSS_COMPILE ?= arm-none-eabi-
 
@@ -21,6 +21,7 @@ all: $(APP)
 
 clean:
 	rm -f $(APP)
+	rm -f $(APP).lst
 
 $(APP): $(APP_SOURCES) gcc.ld
 	$(CROSS_CC) $(CFLAGS) --specs=nosys.specs --specs=nano.specs -T gcc.ld -o $(APP) $(APP_SOURCES) -u _printf_float

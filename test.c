@@ -6,8 +6,6 @@
 #include "r5/kernel/dpl/MpuP_armv7.h"
 #include <stdlib.h>
 
-#include "r5/kernel/dpl/CycleCounterP.h"
-
 // global structures used by MPU and cache init code
 CacheP_Config gCacheConfig = {1, 0}; // cache on, no forced writethrough
 MpuP_Config gMpuConfig = {3, 1, 1}; // 3 regions, background region on, MPU on
@@ -161,7 +159,6 @@ int _write(int handle, char *data, int size)
 
 int main()
 {
-    CycleCounterP_reset();
-    runDhrystone();
+    printf("Hello world!\n");
     return 0;
 }
