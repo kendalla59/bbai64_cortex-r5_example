@@ -98,6 +98,8 @@ C**********************************************************************
 #include <string.h>
 #include <math.h>
 
+//#define PRINTOUT
+
 /* map the FORTRAN math functions, etc. to the C versions */
 #define DSIN	sin
 #define DCOS	cos
@@ -163,7 +165,7 @@ C
 	LOOP = 1000;
 */
 	LOOP = loopstart;
-	II   = 1;
+	II   = 10;
 
 	JJ = 1;
 
@@ -396,8 +398,8 @@ C--------------------------------------------------------------------
 		return;
 	}
 
-    double msecs = ((double)end_usec - (double)bgn_usec) / 1000000.0;
-	printf("Loops: %ld, Iterations: %d, Duration: %ld ms.\n",
+    double msecs = (((double)end_usec - (double)bgn_usec) / 1000000.0);
+	printf("Loops: %ld, Iterations: %d, Duration: %g ms.\n",
 			LOOP, II, msecs);
 
 	KIPS = (100000.0*LOOP*II)/msecs;
