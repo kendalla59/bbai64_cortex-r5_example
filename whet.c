@@ -113,7 +113,7 @@ C**********************************************************************
 void POUT(long N, long J, long K, double X1, double X2, double X3, double X4);
 void PA(double E[]);
 void P0(void);
-void P3(double X, double Y, double *Z);
+void P3(double X, double Y, volatile double *Z);
 /* USAGE	"usage: whetdc [-c] [loops]\n" */
 
 /*
@@ -125,17 +125,17 @@ int J,K,L;
 void runWhetstone()
 {
 	/* used in the FORTRAN version */
-	long I;
-	long N1, N2, N3, N4, N6, N7, N8, N9, N10, N11;
-	double X1,X2,X3,X4,X,Y,Z;
-	long LOOP;
-	int II, JJ;
+	volatile long I;
+	volatile long N1, N2, N3, N4, N6, N7, N8, N9, N10, N11;
+	volatile double X1,X2,X3,X4,X,Y,Z;
+	volatile long LOOP;
+	volatile int II, JJ;
 
 	/* added for this version */
-	long loopstart;
-	long bgn_usec, end_usec;
-	double KIPS;
-	int continuous;
+	volatile long loopstart;
+	volatile long bgn_usec, end_usec;
+	volatile double KIPS;
+	volatile int continuous;
 
 	loopstart = 1000;		/* see the note about LOOP below */
 	continuous = 0;
@@ -165,7 +165,7 @@ C
 	LOOP = 1000;
 */
 	LOOP = loopstart;
-	II   = 10;
+	II   = 1;
 
 	JJ = 1;
 
@@ -437,7 +437,7 @@ P0(void)
 }
 
 void
-P3(double X, double Y, double *Z)
+P3(double X, double Y, volatile double *Z)
 {
 	double X1, Y1;
 
