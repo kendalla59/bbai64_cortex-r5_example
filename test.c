@@ -1,6 +1,7 @@
 // Example code for R5F remoteproc, on the BeagleBone AI-64.
 
 #include "dhry.h"
+#include "whet.h"
 
 #include <stdint.h>
 #include "ipc_rpmsg_linux_resource_table.h"
@@ -167,5 +168,9 @@ int main()
 {
     CycleCounterP_reset();
     runDhrystone();
+
+    CycleCounterP_reset();
+    runWhetstone();
+
     return 0;
 }

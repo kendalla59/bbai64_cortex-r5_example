@@ -344,6 +344,9 @@
  ***************************************************************************
  */
 
+#ifndef _INCLUDED_DHRY_H_
+#define _INCLUDED_DHRY_H_
+
 /* Compiler and system dependent definitions: */
 #define HZ 1000000000
 
@@ -470,3 +473,5 @@ Boolean         Func_3(Enumeration      Enum_Par_Val);
 
 
 void            runDhrystone();
+
+#endif // _INCLUDED_DHRY_H_
