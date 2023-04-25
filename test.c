@@ -1,3 +1,7 @@
+// Example code for R5F remoteproc, on the BeagleBone AI-64.
+
+#include "dhry.h"
+
 #include <stdint.h>
 #include "ipc_rpmsg_linux_resource_table.h"
 #include <string.h>

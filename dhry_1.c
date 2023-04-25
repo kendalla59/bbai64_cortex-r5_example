@@ -16,6 +16,9 @@
  */
 
 #include "dhry.h"
+#include "r5/kernel/dpl/CycleCounterP.h"
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef DHRY_ITERS
 #define DHRY_ITERS 100000
@@ -31,19 +34,6 @@ char            Ch_1_Glob,
                 Ch_2_Glob;
 int             Arr_1_Glob [50];
 int             Arr_2_Glob [50] [50];
-
-extern char     *malloc ();
-Enumeration     Func_1 ();
-  /* forward declaration necessary since Enumeration may not simply be int */
-
-#ifndef REG
-        Boolean Reg = false;
-#define REG
-        /* REG becomes defined as empty */
-        /* i.e. no register variables   */
-#else
-        Boolean Reg = true;
-#endif
 
 /* variables for time measurement: */
 
@@ -74,6 +64,7 @@ float           Microseconds,
 /* end of variables for time measurement */
 
 
+void
 runDhrystone ()
 /*****/
 
@@ -112,16 +103,18 @@ runDhrystone ()
   printf ("\n");
   printf ("Dhrystone Benchmark, Version 2.1 (Language: C)\n");
   printf ("\n");
-  if (Reg)
+#ifdef COMPILED_WITH_REG
   {
     printf ("Program compiled with 'register' attribute\n");
     printf ("\n");
   }
-  else
+#else
   {
     printf ("Program compiled without 'register' attribute\n");
     printf ("\n");
   }
+#endif
+
 #ifdef DHRY_ITERS
   Number_Of_Runs = DHRY_ITERS;
 #else
@@ -273,111 +266,3 @@ runDhrystone ()
   }
   
 }
-
-
-Proc_1 (Ptr_Val_Par)
-/******************/
-
-REG Rec_Pointer Ptr_Val_Par;
-    /* executed once */
-{
-  REG Rec_Pointer Next_Record = Ptr_Val_Par->Ptr_Comp;  
-                                        /* == Ptr_Glob_Next */
-  /* Local variable, initialized with Ptr_Val_Par->Ptr_Comp,    */
-  /* corresponds to "rename" in Ada, "with" in Pascal           */
-  
-  structassign (*Ptr_Val_Par->Ptr_Comp, *Ptr_Glob); 
-  Ptr_Val_Par->variant.var_1.Int_Comp = 5;
-  Next_Record->variant.var_1.Int_Comp 
-        = Ptr_Val_Par->variant.var_1.Int_Comp;
-  Next_Record->Ptr_Comp = Ptr_Val_Par->Ptr_Comp;
-  Proc_3 (&Next_Record->Ptr_Comp);
-    /* Ptr_Val_Par->Ptr_Comp->Ptr_Comp 
-                        == Ptr_Glob->Ptr_Comp */
-  if (Next_Record->Discr == Ident_1)
-    /* then, executed */
-  {
-    Next_Record->variant.var_1.Int_Comp = 6;
-    Proc_6 (Ptr_Val_Par->variant.var_1.Enum_Comp, 
-           &Next_Record->variant.var_1.Enum_Comp);
-    Next_Record->Ptr_Comp = Ptr_Glob->Ptr_Comp;
-    Proc_7 (Next_Record->variant.var_1.Int_Comp, 10, 
-           &Next_Record->variant.var_1.Int_Comp);
-  }
-  else /* not executed */
-    structassign (*Ptr_Val_Par, *Ptr_Val_Par->Ptr_Comp);
-} /* Proc_1 */
-
-
-Proc_2 (Int_Par_Ref)
-/******************/
-    /* executed once */
-    /* *Int_Par_Ref == 1, becomes 4 */
-
-One_Fifty   *Int_Par_Ref;
-{
-  One_Fifty  Int_Loc;  
-  Enumeration   Enum_Loc;
-
-  Int_Loc = *Int_Par_Ref + 10;
-  do /* executed once */
-    if (Ch_1_Glob == 'A')
-      /* then, executed */
-    {
-      Int_Loc -= 1;
-      *Int_Par_Ref = Int_Loc - Int_Glob;
-      Enum_Loc = Ident_1;
-    } /* if */
-  while (Enum_Loc != Ident_1); /* true */
-} /* Proc_2 */
-
-
-Proc_3 (Ptr_Ref_Par)
-/******************/
-    /* executed once */
-    /* Ptr_Ref_Par becomes Ptr_Glob */
-
-Rec_Pointer *Ptr_Ref_Par;
-
-{
-  if (Ptr_Glob != Null)
-    /* then, executed */
-    *Ptr_Ref_Par = Ptr_Glob->Ptr_Comp;
-  Proc_7 (10, Int_Glob, &Ptr_Glob->variant.var_1.Int_Comp);
-} /* Proc_3 */
-
-
-Proc_4 () /* without parameters */
-/*******/
-    /* executed once */
-{
-  Boolean Bool_Loc;
-
-  Bool_Loc = Ch_1_Glob == 'A';
-  Bool_Glob = Bool_Loc | Bool_Glob;
-  Ch_2_Glob = 'B';
-} /* Proc_4 */
-
-
-Proc_5 () /* without parameters */
-/*******/
-    /* executed once */
-{
-  Ch_1_Glob = 'A';
-  Bool_Glob = false;
-} /* Proc_5 */
-
-
-        /* Procedure for the assignment of structures,          */
-        /* if the C compiler doesn't support this feature       */
-#ifdef  NOSTRUCTASSIGN
-memcpy (d, s, l)
-register char   *d;
-register char   *s;
-register int    l;
-{
-        while (l--) *d++ = *s++;
-}
-#endif
-
-
